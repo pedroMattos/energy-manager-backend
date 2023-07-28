@@ -16,11 +16,11 @@ const knex = require('knex')({
   connection: async () => {
 
     return {
-      host : '127.0.0.1',
-      port : 5432,
+      host : 'containers-us-west-116.railway.app',
+      port : 7044,
       user : 'postgres',
-      password : 'suporte123',
-      database : 'energy-manager',
+      password : 'yxWGXRSIBR3AKVOXhFvN',
+      database : 'railway',
     };
   }
 });
