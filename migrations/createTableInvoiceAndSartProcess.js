@@ -24,11 +24,25 @@ function createTableInvoiceAndSartProcess() {
       table.float('compensated_kwh_price')
       table.float('public_energy_contribution')
       table.float('total_invoice_price')
-
-      dataProcessing(process.env.FILES_FOLDER_NAME)
+      createContractNumberTable()
     })
   }).catch((error) => {
     console.error(error)
+  })
+}
+
+function createContractNumberTable() {
+  pgDbConnection.schema.withSchema('public').hasTable('contract_number').then((exists) => {
+    if (exists) return
+
+    return pgDbConnection.schema.withSchema('public').createTable('contract_number', (table) => {
+      table.increments()
+      table.bigint('number')
+
+      dataProcessing(process.env.FILES_FOLDER_NAME)
+    }).catch((error) => {
+      console.error(error)
+    })
   })
 }
 

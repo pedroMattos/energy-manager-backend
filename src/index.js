@@ -11,6 +11,7 @@ app.use((req, res, next) => {
 require('../migrations/createTableInvoiceAndSartProcess')()
 
 app.get('/get-all-invoices', api.getInvoicesData)
+app.get('/contracts', api.getContracts)
 app.get('/get-kwh', api.getInvoicesKwh)
 app.get('/get-hfp', api.getInvoicesHfp)
 app.get('/get-icms', api.getInvoicesIcms)

@@ -1,7 +1,7 @@
 const monthsEnum = require('../monthsEnum')
 const pgDbConnection = require('../pgConfig')
 require("dotenv").config()
-
+let lastContract = null
 function setInvoiceData(data) {
   const month = data.get('referenceMonth').split('/').at(0)
   const year = data.get('referenceMonth').split('/').at(1)
@@ -27,13 +27,37 @@ function setInvoiceData(data) {
     total_invoice_price: data.get('totalInvoicePrice')
   }).then(() => {
     console.log('Dados de fatura inseridos na tabela invoice')
+    if (lastContract === data.get('contractNumber')) return
+    setContractNumberData(data.get('contractNumber'))
   }).catch((error) => {
     console.error('Houve um erro ao tentar inserir os dados:', error)
   })
 }
 
+function setContractNumberData(contractNumber) {
+  lastContract = contractNumber
+  pgDbConnection('contract_number').select('*')
+  .where({ number: contractNumber })
+  .then((data) => {
+    if (data.length) return
+    console.log(contractNumber, data)
+    pgDbConnection('contract_number').insert({
+      number: contractNumber
+    }).catch((error) => {
+      console.log(error)
+    })
+  })
+}
+
 function getInvoicesData(req, res) {
   pgDbConnection('invoice').select('*').then((data) => {
+    res.send(data)
+  })
+}
+
+function getContracts(req, res) {
+  pgDbConnection('contract_number').select('*')
+  .then((data) => {
     res.send(data)
   })
 }
@@ -166,5 +190,7 @@ module.exports = {
   getMoneySavePricesByOrder,
   getContractNumber,
   invoicesByReferenceMonth,
-  invoicesByContractNumber
+  invoicesByContractNumber,
+  setContractNumberData,
+  getContracts
 }
