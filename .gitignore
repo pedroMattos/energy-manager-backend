@@ -1,0 +1,6 @@
+/node_modules
+/files/*
+/scraps/*
+.env
+package-lock.json
+dist
