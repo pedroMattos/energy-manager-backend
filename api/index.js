@@ -50,7 +50,8 @@ function setContractNumberData(contractNumber) {
 }
 
 function getInvoicesData(req, res) {
-  pgDbConnection('invoice').select('*').then((data) => {
+  const constractNumber = req.params.contractNumber
+  pgDbConnection('invoice').select('*').where({contract_number: constractNumber}).then((data) => {
     res.send(data)
   })
 }
@@ -91,8 +92,10 @@ function getInvoicesPricesByOrder(req, res) {
 
 function getMoneySavePricesByOrder(req, res) {
   const order = req.params.order
+  const contractNumber = req.params.contractNumber
   pgDbConnection('invoice').select('hfp_price', 'compensated_kwh_price')
   .orderBy([{ column: 'invoice_due_date', order }])
+  .where({ contract_number: contractNumber })
   .then((data) => {
     res.send(data)
   })
@@ -109,8 +112,10 @@ function getInvoicesContributionByOrder(req, res) {
 
 function getInvoicesByDateOrdered(req, res) {
   const order = req.params.order
+  const contractNumber = req.params.contractNumber
   pgDbConnection('invoice').select('total_invoice_price', 'invoice_due_date')
   .orderBy([{ column: 'invoice_due_date', order }])
+  .where({ contract_number: contractNumber })
   .then((data) => {
     res.send(data)
   })
@@ -135,16 +140,19 @@ function invoicesByContractNumber(req, res) {
 }
 
 function invoicesByReferenceMonth(req, res) {
+  const contractNumber = req.params.contractNumber
   const date = req.params.date
   pgDbConnection('invoice').select('*')
-  .where({ reference_month: date })
+  .where({ reference_month: date, contract_number: contractNumber })
   .then((data) => {
     res.send(data)
   })
 }
 
 function getLastkWhConsumption(req, res) {
+  const contractNumber = req.params.contractNumber
   pgDbConnection('invoice').select('kwh')
+  .where({ contract_number: contractNumber })
   .orderBy([{ column: 'invoice_due_date', order: 'asc' }])
   .then((data) => {
     res.send(data.at(-1))
@@ -152,16 +160,20 @@ function getLastkWhConsumption(req, res) {
 }
 
 function getLastInvoicePrice(req, res) {
+  const contractNumber = req.params.contractNumber
   pgDbConnection('invoice').select('total_invoice_price')
   .orderBy([{ column: 'invoice_due_date', order: 'asc' }])
+  .where({ contract_number: contractNumber })
   .then((data) => {
     res.send(data.at(-1))
   })
 }
 
 function getLastMoneySave(req, res) {
+  const contractNumber = req.params.contractNumber
   pgDbConnection('invoice').select('hfp_price', 'compensated_kwh_price')
   .orderBy([{ column: 'invoice_due_date', order: 'asc' }])
+  .where({ contract_number: contractNumber })
   .then((data) => {
     res.send(data.at(-1))
   })
