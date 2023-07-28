@@ -4,10 +4,9 @@ const PDFParser = require('pdf-parse');
 const api = require('../api')
 
 function startDataProcessing(folderName) {
-  console.log(folderName)
-  const files = fs.readdirSync(`./${folderName}`)
+  const files = fs.readdirSync(`${folderName}`)
   files.forEach((file) => {
-    readPdf(`./${folderName}/${file}`)
+    readPdf(`${folderName}/${file}`)
   })
 }
 
@@ -16,7 +15,7 @@ function readPdf(pathPdfile) {
   const dataBuffer = fs.readFileSync(pathPdfile)
   PDFParser(dataBuffer).then((data) => {
     const txtName = new Date().getTime()
-    const scrapPath = `./scraps/${txtName}.txt`
+    const scrapPath = `scraps/${txtName}.txt`
     fs.writeFileSync(scrapPath, data.text)
     const scrapTxtSreadStream = fs.createReadStream(scrapPath)
     readline.createInterface({
@@ -83,7 +82,7 @@ function getContractNumber(line) {
 
 function getReferenceMonth(line) {
   // Match busca pelos 4 espaços em branco no inicio, logo após pelo mês abreviado
-  const referenceMonth = /^(\s{4}[A-Z]{3})/gm
+  const referenceMonth = /\b[A-Z]{3}\/\d{4}\b/gm
   const matches = line.match(referenceMonth)
   if (matches?.length) {
     const month = matches.at(0).trim()

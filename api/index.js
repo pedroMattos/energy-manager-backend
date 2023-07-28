@@ -1,11 +1,15 @@
+const monthsEnum = require('../monthsEnum')
 const pgDbConnection = require('../pgConfig')
 require("dotenv").config()
 
 function setInvoiceData(data) {
+  const month = data.get('referenceMonth').split('/').at(0)
+  const year = data.get('referenceMonth').split('/').at(1)
+  const date = `${monthsEnum[month]}/${year}`
   pgDbConnection('invoice').insert({
     contract_number: data.get('contractNumber'),
     instalation_number: data.get('instalationNumber'),
-    reference_month: data.get('referenceMonth'),
+    reference_month: new Date(date).getTime(),
     invoice_due_date: new Date(data.get('invoiceDueDate')).getTime(),
     kwh: data.get('kwh'),
     kwh_unit: data.get('kwhUnit'),
@@ -97,6 +101,24 @@ function getInvoicesByInstalationNumber(req, res) {
   })
 }
 
+function invoicesByContractNumber(req, res) {
+  const number = req.params.number
+  pgDbConnection('invoice').select('*')
+  .where({ contract_number: number })
+  .then((data) => {
+    res.send(data)
+  })
+}
+
+function invoicesByReferenceMonth(req, res) {
+  const date = req.params.date
+  pgDbConnection('invoice').select('*')
+  .where({ reference_month: date })
+  .then((data) => {
+    res.send(data)
+  })
+}
+
 function getLastkWhConsumption(req, res) {
   pgDbConnection('invoice').select('kwh')
   .orderBy([{ column: 'invoice_due_date', order: 'asc' }])
@@ -142,5 +164,7 @@ module.exports = {
   getLastInvoicePrice,
   getLastMoneySave,
   getMoneySavePricesByOrder,
-  getContractNumber
+  getContractNumber,
+  invoicesByReferenceMonth,
+  invoicesByContractNumber
 }
