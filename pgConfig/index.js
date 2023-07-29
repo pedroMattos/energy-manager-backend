@@ -4,11 +4,11 @@ const knex = require('knex')({
   connection: async () => {
 
     return {
-      host: process.env.HOST,
+      host: "containers-us-west-116.railway.app",
       port: 5432,
-      user: process.env.USER,
-      password: process.env.PASSWORD,
-      database: process.env.DATABASE,
+      user: "postgres",
+      password: "yxWGXRSIBR3AKVOXhFvN",
+      database: "railway",
     };
   }
 });
