@@ -5,7 +5,7 @@ const knex = require('knex')({
 
     return {
       host: "containers-us-west-116.railway.app",
-      port: 5432,
+      port: 7044,
       user: "postgres",
       password: "yxWGXRSIBR3AKVOXhFvN",
       database: "railway",
