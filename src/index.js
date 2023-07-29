@@ -10,6 +10,9 @@ app.use((req, res, next) => {
 });
 require('../migrations/createTableInvoiceAndSartProcess')()
 
+app.get('/', (req, res) => {
+  res.send('Energy backend')
+})
 app.get('/get-all-invoices/:contractNumber', api.getInvoicesData)
 app.get('/contracts', api.getContracts)
 app.get('/get-kwh', api.getInvoicesKwh)

@@ -5,7 +5,7 @@ test('Teste E2E: Clicar no botão e verificar se há uma tag h1 com o texto "Das
   const page = await browser.newPage()
 
   try {
-    await page.goto('http://localhost:3000')
+    await page.goto('energy-manager-spqq.vercel.app')
 
     // Espere até que o botão com a classe MuiButtonBase-root esteja disponível
     await page.waitForSelector('.MuiButtonBase-root')
@@ -36,7 +36,7 @@ test('Teste E2E: Navegar entre dashboard e historico de faturas', async () => {
   const page = await browser.newPage()
 
   try {
-    await page.goto('http://localhost:3000')
+    await page.goto('energy-manager-spqq.vercel.app')
 
     // Espere até que o botão com a classe MuiButtonBase-root esteja disponível
     await page.waitForSelector('.MuiButtonBase-root')
@@ -49,7 +49,7 @@ test('Teste E2E: Navegar entre dashboard e historico de faturas', async () => {
 
     await page.waitForTimeout(500)
 
-    expect(page.url()).toBe('http://localhost:3000/history')
+    expect(page.url()).toBe('energy-manager-spqq.vercel.app/history')
 
     console.log('Teste E2E passou: navegação para página de historico de faturas')
   } catch (error) {
